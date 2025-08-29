@@ -3,8 +3,6 @@
  * Estilos generales y base
  * ---------------------------------------------------------------------------------------------------------------------------------
  */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap');
-
 :root {
     --background-color: #0c0c0c;
     --card-background: rgba(20, 20, 20, 0.6);
@@ -20,7 +18,7 @@
 }
 
 body {
-    font-family: 'Roboto', sans-serif; /* Usamos una fuente para el cuerpo */
+    font-family: 'Segoe UI', Arial, sans-serif;
     padding: 0;
     margin: 0;
     background-color: var(--background-color);
@@ -52,23 +50,14 @@ body::before {
 }
 
 h2 {
-    font-family: 'Montserrat', sans-serif;
     text-align: center;
     margin-bottom: 20px;
     font-size: 2.5rem;
     letter-spacing: -1px;
-    font-weight: 700;
+    font-weight: 300;
     background: linear-gradient(135deg, #a8c0ff, #3f51b5);
-    background-size: 400% 400%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradientText 5s ease infinite;
-}
-
-@keyframes gradientText {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
 }
 
 /*
@@ -88,13 +77,12 @@ h2 {
     box-shadow: 0 10px 30px var(--shadow-color);
     backdrop-filter: blur(15px) saturate(180%);
     -webkit-backdrop-filter: blur(15px) saturate(180%);
-    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-    overflow-y: scroll;
-    scrollbar-width: none;
+    transition: height 0.5s ease-in-out;
+    overflow-y: auto; /* Temporarily set to auto, changed by JS for animations */
 }
 
-.container::-webkit-scrollbar {
-    display: none;
+.container.animating {
+    overflow-y: hidden;
 }
 
 .container:hover {
@@ -123,19 +111,18 @@ thead {
 }
 
 th, td {
-    padding: 20px 15px; /* Aumentamos el padding vertical para hacer las filas más altas */
+    padding: 10px;
     text-align: center;
     vertical-align: middle;
     border: none;
     background: none;
-    font-weight: 700;
-    font-size: 1.2em; /* Texto un poco más grande */
+    font-weight: 400;
     transition: all 0.2s ease-in-out;
 }
 
 th {
     color: var(--text-color);
-    font-size: 1rem; /* Ajuste para el encabezado si es necesario */
+    font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     background-color: rgba(255, 255, 255, 0.05);
@@ -146,8 +133,8 @@ th {
 tbody tr {
     background-color: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, height 0.5s ease, opacity 0.5s ease;
-    height: auto; /* La altura se ajustará con el padding del td */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: auto;
     position: relative;
 }
 
@@ -166,9 +153,9 @@ td:last-child {
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 }
-        
+
 /* Oculta la columna "Acciones" en el encabezado y el cuerpo */
-#clientesTable th:last-child, 
+#clientesTable th:last-child,
 #clientesTable td:last-child {
     display: none;
 }
@@ -184,24 +171,23 @@ input[type="date"],
 select {
     width: 90%;
     min-width: 80px;
-    padding: 10px 12px; /* Aumentamos el padding para que coincida con las celdas */
+    padding: 8px 10px;
     border-radius: 8px;
     border: 1px solid var(--input-border);
     background-color: var(--input-background);
     color: var(--text-color);
-    font-size: 1.1rem; /* Texto de entrada más grande */
+    font-size: 1rem;
     transition: all 0.3s ease;
     outline: none;
     appearance: none;
     -moz-appearance: textfield;
     box-sizing: border-box;
-    font-weight: normal; 
 }
 
-input[type="number"]::-webkit-inner-spin-button, 
-input[type="number"]::-webkit-outer-spin-button { 
-    -webkit-appearance: none; 
-    margin: 0; 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 input:focus, select:focus {
@@ -219,8 +205,6 @@ select {
 
 span {
     display: inline-block;
-    font-weight: 700;
-    font-size: 1.2em; /* Texto estático en negrita y más grande */
 }
 
 /*
@@ -234,37 +218,21 @@ span {
     padding: 12px 24px;
     border: none;
     border-radius: 30px;
-    background-image: linear-gradient(135deg, #a8c0ff, #3f51b5, #28a745);
-    background-size: 300% 100%;
-    background-position: 0% 50%;
+    background-color: var(--accent-color);
     color: white;
     font-size: 1.1rem;
     font-weight: 500;
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
-    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-    animation: gradientButton 5s ease infinite;
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
 }
 
-@keyframes gradientButton {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
 #agregarProyecto:hover {
-    animation: none;
-    background-position: 100% 50%;
+    background-color: #218838;
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
-}
-
-#agregarProyecto:active {
-    background-position: 100% 50%;
-    transform: translateY(0);
-    box-shadow: 0 2px 10px rgba(40, 167, 69, 0.5);
 }
 
 /*
@@ -273,7 +241,7 @@ span {
  */
 .acciones-flotantes {
     position: absolute;
-    right: -100px;
+    right: -100px; /* Posición inicial fuera de la tabla para que no se vean */
     top: 50%;
     transform: translateY(-50%);
     display: flex;
@@ -285,14 +253,14 @@ span {
 
 tr:hover .acciones-flotantes {
     opacity: 1;
-    right: 15px;
+    right: 15px; /* Se mueven a su posición final al costado de la fila */
 }
 
 .acciones-flotantes button {
-    width: 38px; /* Ligeramente más grandes */
-    height: 38px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    font-size: 18px; /* Íconos un poco más grandes */
+    font-size: 16px;
     border: none;
     color: white;
     cursor: pointer;
@@ -319,31 +287,31 @@ tr:hover .acciones-flotantes {
  */
 .progress-container {
     width: 100%;
-    height: 10px; /* Barra de progreso más alta */
+    height: 8px;
     background-color: var(--progress-container-color);
-    border-radius: 5px;
-    margin-top: 8px; /* Más espacio */
+    border-radius: 4px;
+    margin-top: 5px;
 }
 
 .progress-bar {
     height: 100%;
     width: 0%;
     background-color: var(--progress-bar-color);
-    border-radius: 5px;
+    border-radius: 4px;
     transition: width 0.4s ease-out;
 }
 
 .estado, .prioridad {
-    font-weight: 700;
-    border-radius: 25px; /* Bordes más redondeados */
-    padding: 8px 15px; /* Más padding */
-    font-size: 1.15em; /* Texto un poco más grande */
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 0.9em;
     text-transform: capitalize;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: 110px; /* Ancho mínimo ajustado */
-    height: 38px; /* Altura ajustada */
+    min-width: 100px;
+    height: 30px;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
@@ -362,7 +330,7 @@ tr:hover .acciones-flotantes {
 .MuyAlta { background-color: rgba(194, 59, 34, 0.2); color: #c23b22; }
 .SinPrioridad { background-color: rgba(204, 204, 204, 0.2); color: #cccccc; }
 
-/* Animaciones de fila */
+/* Animación para la entrada de una fila */
 @keyframes fadeInSlideUp {
     from {
         opacity: 0;
@@ -375,32 +343,35 @@ tr:hover .acciones-flotantes {
 }
 
 .new-project-anim {
-    animation: fadeInSlideUp 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    animation: fadeInSlideUp 0.5s ease-out forwards;
 }
 
-/* Animación de eliminación de proyecto */
-@keyframes fadeOutSlideDown {
+/* Animación para la eliminación de una fila */
+@keyframes fadeOutCollapse {
     from {
         opacity: 1;
-        transform: translateY(0);
         height: var(--row-height);
+        padding-top: 10px;
+        padding-bottom: 10px;
+        margin-top: 12px;
         margin-bottom: 12px;
     }
     to {
         opacity: 0;
-        transform: translateY(-20px);
         height: 0;
-        margin-bottom: 0;
         padding-top: 0;
         padding-bottom: 0;
+        margin-top: 0;
+        margin-bottom: 0;
     }
 }
 
 .project-delete-anim {
-    animation: fadeOutSlideDown 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    animation: fadeOutCollapse 0.5s ease-out forwards;
+    overflow: hidden; /* Oculta el contenido durante la animación de colapso */
 }
 
-/* Animación para el reordenamiento */
-.sorting-anim {
+/* Se aplica para las filas que se mueven al reordenar */
+.reorganize-anim {
     transition: transform 0.5s ease-in-out;
 }
