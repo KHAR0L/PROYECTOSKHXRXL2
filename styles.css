@@ -3,7 +3,7 @@
  * Estilos generales y base
  * ---------------------------------------------------------------------------------------------------------------------------------
  */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
 :root {
     --background-color: #0c0c0c;
@@ -20,7 +20,7 @@
 }
 
 body {
-    font-family: 'Roboto', sans-serif; /* Usamos una fuente para el cuerpo */
+    font-family: 'Segoe UI', Arial, sans-serif;
     padding: 0;
     margin: 0;
     background-color: var(--background-color);
@@ -52,14 +52,14 @@ body::before {
 }
 
 h2 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat', sans-serif; /* Fuente más gruesa */
     text-align: center;
     margin-bottom: 20px;
     font-size: 2.5rem;
     letter-spacing: -1px;
     font-weight: 700;
     background: linear-gradient(135deg, #a8c0ff, #3f51b5);
-    background-size: 400% 400%;
+    background-size: 400% 400%; /* Ajuste para que la animación sea más notable */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: gradientText 5s ease infinite;
@@ -123,13 +123,12 @@ thead {
 }
 
 th, td {
-    padding: 15px; /* Aumentamos el padding para hacer las filas más altas */
+    padding: 10px;
     text-align: center;
     vertical-align: middle;
     border: none;
     background: none;
-    font-weight: 700; /* Texto en negrita para la legibilidad */
-    font-size: 1.1em; /* Texto más grande */
+    font-weight: 400;
     transition: all 0.2s ease-in-out;
 }
 
@@ -195,7 +194,6 @@ select {
     appearance: none;
     -moz-appearance: textfield;
     box-sizing: border-box;
-    font-weight: normal; /* Asegura que los campos de entrada no sean negrita */
 }
 
 input[type="number"]::-webkit-inner-spin-button, 
@@ -219,8 +217,6 @@ select {
 
 span {
     display: inline-block;
-    font-weight: 700; /* Texto estático en negrita */
-    font-size: 1.1em;
 }
 
 /*
@@ -255,7 +251,7 @@ span {
 }
 
 #agregarProyecto:hover {
-    animation: none;
+    animation: none; /* Desactiva la animación infinita al pasar el cursor */
     background-position: 100% 50%;
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
@@ -334,10 +330,10 @@ tr:hover .acciones-flotantes {
 }
 
 .estado, .prioridad {
-    font-weight: 700;
+    font-weight: 600;
     border-radius: 20px;
     padding: 6px 12px;
-    font-size: 1.1em;
+    font-size: 0.9em;
     text-transform: capitalize;
     display: flex;
     justify-content: center;
