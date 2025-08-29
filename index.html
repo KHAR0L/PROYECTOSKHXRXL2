@@ -1,8 +1,8 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gestión de Clientes - Proyectos Dinámicos</title>
+    <meta charset="UTF-8">
+    <title>Gestión de Clientes - Proyectos Dinámicos</title>
     <style>
         /*
          * ---------------------------------------------------------------------------------------------------------------------------------
@@ -84,11 +84,7 @@
             backdrop-filter: blur(15px) saturate(180%);
             -webkit-backdrop-filter: blur(15px) saturate(180%);
             transition: height 0.5s ease-in-out;
-            overflow-y: auto; /* Temporarily set to auto, changed by JS for animations */
-        }
-
-        .container.animating {
-            overflow-y: hidden;
+            overflow-y: auto;
         }
 
         .container:hover {
@@ -353,14 +349,10 @@
         }
 
         /* Animación para la eliminación de una fila */
-        @keyframes fadeOutCollapse {
+        @keyframes fadeOutSlideDown {
             from {
                 opacity: 1;
                 height: var(--row-height);
-                padding-top: 10px;
-                padding-bottom: 10px;
-                margin-top: 12px;
-                margin-bottom: 12px;
             }
             to {
                 opacity: 0;
@@ -373,8 +365,7 @@
         }
         
         .project-delete-anim {
-            animation: fadeOutCollapse 0.5s ease-out forwards;
-            overflow: hidden; /* Oculta el contenido durante la animación de colapso */
+            animation: fadeOutSlideDown 0.5s ease-out forwards;
         }
 
         /* Se aplica para las filas que se mueven al reordenar */
@@ -382,18 +373,34 @@
             transition: transform 0.5s ease-in-out;
         }
     </style>
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<h2>Gestión de Clientes - Proyectos Dinámicos</h2>
-@@ -408,8 +31,6 @@ <h2>Gestión de Clientes - Proyectos Dinámicos</h2>
-</table>
-</div>
-<button id="agregarProyecto">Agregar Proyecto</button>
+    <h2>Gestión de Clientes - Proyectos Dinámicos</h2>
+    <div class="container">
+        <table id="clientesTable">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Contacto</th>
+                    <th>Proyecto</th>
+                    <th>Estado</th>
+                    <th>Tentativa</th>
+                    <th>Plazo (días)</th>
+                    <th>Restante</th>
+                    <th>Calidad</th>
+                    <th>Prioridad</th>
+                    <th>Monto</th>
+                    <th>Pago</th>
+                    <th>Progreso</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <button id="agregarProyecto">Agregar Proyecto</button>
     <script>
         // El JavaScript corregido de la siguiente sección va aquí
     </script>
-    <script src="script.js"></script>
 </body>
-</html>
 </html>
