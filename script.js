@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tableBody = document.querySelector('#clientesTable tbody');
     const agregarProyectoBtn = document.getElementById('agregarProyecto');
     const container = document.querySelector('.container');
-    
+
     const prioridadMap = {
         'MuyAlta': 5,
         'Alta': 4,
@@ -20,8 +20,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updateContainerHeight = () => {
         const tableHeight = tableBody.getBoundingClientRect().height;
-        container.style.height = `${tableHeight + 60}px`; 
+        container.style.height = `${tableHeight + 60}px`;
     };
+
+    // --- NUEVAS FUNCIONES DE PERSISTENCIA ---
+    function guardarProyectos() {
+        const filas = Array.from(tableBody.querySelectorAll('tr'));
+        const proyectos = filas.map(fila => {
+            const datos = {};
+            fila.querySelectorAll('td').forEach(td => {
+                const label = td.dataset.label;
+                let valor;
+                const input = td.querySelector('input, select');
+                if (input) {
+                    valor = input.value;
+                } else {
+                    valor = td.innerText.trim();
+                }
+                datos[label] = valor;
+            });
+            return datos;
+        });
+        localStorage.setItem('proyectos', JSON.stringify(proyectos));
+    }
+
+    function cargarProyectos() {
+        const proyectosString = localStorage.getItem('proyectos');
+        if (proyectosString) {
+            const proyectos = JSON.parse(proyectosString);
+            proyectos.forEach(proyecto => {
+                const fila = crearFila();
+                fila.querySelectorAll('td').forEach(td => {
+                    const label = td.dataset.label;
+                    const valor = proyecto[label];
+                    const input = td.querySelector('input, select');
+
+                    if (input) {
+                        input.value = valor;
+                    }
+
+                    if (label === 'Estado') {
+                        td.innerText = valor;
+                        td.className = `estado ${valor.replace(' ', '-')}`;
+                    } else if (label === 'Prioridad') {
+                        td.innerText = valor;
+                        td.className = `prioridad ${valor.replace(' ', '')}`;
+                    }
+                });
+                tableBody.appendChild(fila);
+                actualizarFila(fila);
+                toggleEditar(fila, fila.querySelector('.edit-btn'), false); // Cambia a modo visual
+            });
+            reordenarTabla();
+        }
+    }
+
+    // --- CÓDIGO ORIGINAL MODIFICADO ---
 
     function crearFila() {
         const fila = document.createElement('tr');
@@ -30,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const month = (today.getMonth() + 1).toString().padStart(2, '0');
         const day = today.getDate().toString().padStart(2, '0');
         const formattedDate = `${year}-${month}-${day}`;
-        
+
         fila.innerHTML = `
             <td data-label="Cliente"><span></span><input type="text"></td>
             <td data-label="Contacto"><span></span><input type="text"></td>
@@ -79,29 +133,34 @@ document.addEventListener('DOMContentLoaded', () => {
         btnBorrar.innerHTML = '🗑️';
         btnBorrar.className = 'delete-btn';
         acciones.append(btnEditar, btnBorrar);
-        
+
         fila.appendChild(acciones);
 
         fila.querySelectorAll('input, select').forEach(input => {
-            input.addEventListener('input', () => actualizarFila(fila));
+            input.addEventListener('input', () => {
+                actualizarFila(fila);
+                guardarProyectos(); // Guarda al actualizar
+            });
         });
 
         btnEditar.addEventListener('click', () => {
             toggleEditar(fila, btnEditar);
             if (fila.dataset.editing === 'false') {
                 reordenarTabla();
+                guardarProyectos(); // Guarda al salir del modo de edición
             }
         });
-        
+
         btnBorrar.addEventListener('click', () => {
             const filaHeight = fila.getBoundingClientRect().height;
             fila.style.setProperty('--row-height', `${filaHeight}px`);
 
             fila.classList.add('project-delete-anim');
-            
+
             fila.addEventListener('animationend', () => {
                 fila.remove();
                 reordenarTabla();
+                guardarProyectos(); // Guarda al borrar
             }, { once: true });
         });
 
@@ -139,18 +198,18 @@ document.addEventListener('DOMContentLoaded', () => {
             inputs.forEach(i => i.style.display = !isEditing ? 'inline-block' : 'none');
             progressContainer.style.display = !isEditing ? 'none' : 'block';
         }
-        
+
         updateContainerHeight();
     }
 
-    /**
-     * Actualiza los datos y la visualización de una fila.
-     */
     function actualizarFila(fila) {
         const getInputValue = (cellIndex) => fila.cells[cellIndex].querySelector('input, select')?.value;
 
-        const trabajado = parseFloat(fila.cells[11].querySelector('input:nth-of-type(1)')?.value) || 0;
-        const meta = parseFloat(fila.cells[11].querySelector('input:nth-of-type(2)')?.value) || 0;
+        const trabajadoInput = fila.cells[11].querySelector('input[placeholder="Trabajado"]');
+        const metaInput = fila.cells[11].querySelector('input[placeholder="Meta"]');
+        const trabajado = parseFloat(trabajadoInput?.value) || 0;
+        const meta = parseFloat(metaInput?.value) || 0;
+
         const progresoPerc = meta > 0 ? Math.min(trabajado / meta, 1) : 0;
         fila.querySelector('.progress-bar').style.width = `${progresoPerc * 100}%`;
 
@@ -174,17 +233,17 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (trabajado > 0) {
             estado = 'En-progreso';
         }
-        
+
         fila.cells[3].innerText = estado.replace('-', ' ');
         fila.cells[3].className = `estado ${estado}`;
-        
+
         const prioridadCell = fila.cells[8];
         const calidad = getInputValue(7);
         const calidadPunt = calidad === 'Básica' ? 1 : calidad === 'Media' ? 3 : 5;
         const factorMonto = monto ? Math.pow(monto / 100, 0.6) : 0;
         let factorPlazo = 0;
         if (plazoDias > 0) factorPlazo = Math.max(0, 1 - (restante / 365));
-        
+
         const urgencia = (1 - progresoPerc) * 5 + factorPlazo * 5;
         const puntos = urgencia + calidadPunt + factorMonto * 1.2;
 
@@ -198,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         prioridadCell.innerText = nivel.replace(/([A-Z])/g, ' $1').trim();
         prioridadCell.className = `prioridad ${nivel}`;
-        
+
         fila.dataset.prioridadValue = prioridadMap[nivel];
 
         fila.querySelectorAll('td').forEach(td => {
@@ -210,8 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function reordenarTabla() {
         const filas = Array.from(tableBody.querySelectorAll('tr'));
-        filas.forEach(fila => actualizarFila(fila)); // Actualiza los datos de todas las filas
-        
+        filas.forEach(fila => actualizarFila(fila));
+        guardarProyectos();
+
         const posicionesIniciales = new Map();
         filas.forEach(fila => {
             posicionesIniciales.set(fila, fila.getBoundingClientRect());
@@ -225,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         filas.forEach(fila => tableBody.appendChild(fila));
-        
+
         requestAnimationFrame(() => {
             filas.forEach(fila => {
                 const nuevaPosicion = fila.getBoundingClientRect();
@@ -235,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (Math.abs(deltaY) > 1) {
                     fila.style.transform = `translateY(${deltaY}px)`;
                     fila.offsetHeight;
-                    
+
                     requestAnimationFrame(() => {
                         fila.style.transition = 'transform 0.5s ease-in-out';
                         fila.style.transform = '';
@@ -246,31 +306,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-        
+
         updateContainerHeight();
     }
 
     agregarProyectoBtn.addEventListener('click', () => {
         const nuevaFila = crearFila();
-        
+
         const currentTableHeight = tableBody.getBoundingClientRect().height;
         tableBody.appendChild(nuevaFila);
-        
+
         const newTableHeight = tableBody.getBoundingClientRect().height;
         container.style.height = `${newTableHeight + 60}px`;
 
         nuevaFila.classList.add('new-project-anim');
-        
+
         nuevaFila.addEventListener('animationend', () => {
             nuevaFila.classList.remove('new-project-anim');
             reordenarTabla();
+            guardarProyectos(); // Guarda al añadir
         }, { once: true });
-        
+
         actualizarFila(nuevaFila);
     });
 
     // Iniciar la actualización periódica cada 1 minuto (60000ms)
-    setInterval(reordenarTabla, 60000);
-    
+    setInterval(() => {
+        reordenarTabla();
+        guardarProyectos(); // Guarda periódicamente
+    }, 60000);
+
+    // Cargar los datos al iniciar la página
+    cargarProyectos();
     updateContainerHeight();
 });
