@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const AUTH_KEY = 'auth_status';
     const PASSWORD = 'quieroamimama123';
 
-    // --- Funciones para la Autenticación
     function checkAuth() {
         const isAuthenticated = localStorage.getItem(AUTH_KEY) === 'true';
         if (isAuthenticated) {
@@ -107,19 +106,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const input = td.querySelector('input, select');
                 const span = td.querySelector('span');
 
-                if (input) {
-                    datos[label] = input.value;
-                } else if (span) {
-                    datos[label] = span.innerText.trim();
-                } else {
-                    datos[label] = td.innerText.trim();
-                }
-
                 if (label === 'Progreso') {
                     const trabajadoInput = td.querySelector('input[placeholder="Trabajado"]');
                     const metaInput = td.querySelector('input[placeholder="Meta"]');
                     datos['Progreso_trabajado'] = trabajadoInput.value;
                     datos['Progreso_meta'] = metaInput.value;
+                    datos[label] = `${trabajadoInput.value} / ${metaInput.value}`;
+                } else if (input) {
+                    datos[label] = input.value;
+                } else if (span) {
+                    datos[label] = span.innerText.trim();
+                } else {
+                    datos[label] = td.innerText.trim();
                 }
             });
             return datos;
@@ -139,10 +137,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     const input = td.querySelector('input, select');
                     const span = td.querySelector('span');
                     
-                    if (input) {
+                    if (label === 'Progreso') {
+                        const trabajadoInput = td.querySelector('input[placeholder="Trabajado"]');
+                        const metaInput = td.querySelector('input[placeholder="Meta"]');
+                        if (trabajadoInput) trabajadoInput.value = proyecto['Progreso_trabajado'] || '';
+                        if (metaInput) metaInput.value = proyecto['Progreso_meta'] || '';
+                        if (span) span.innerText = valor || '0 / 0';
+                    } else if (input) {
                         input.value = valor || '';
-                    }
-                    if (span) {
+                        if (span) span.innerText = valor || '';
+                    } else if (span) {
                         span.innerText = valor || '';
                     }
 
@@ -150,11 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         td.className = `estado ${valor.replace(' ', '-')}`;
                     } else if (label === 'Prioridad' && valor) {
                         td.className = `prioridad ${valor.replace(' ', '')}`;
-                    } else if (label === 'Progreso') {
-                        const trabajadoInput = td.querySelector('input[placeholder="Trabajado"]');
-                        const metaInput = td.querySelector('input[placeholder="Meta"]');
-                        if (trabajadoInput) trabajadoInput.value = proyecto['Progreso_trabajado'] || '';
-                        if (metaInput) metaInput.value = proyecto['Progreso_meta'] || '';
                     }
                 });
                 tableBody.appendChild(fila);
@@ -167,12 +166,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function crearFila() {
         const fila = document.createElement('tr');
+        const today = new Date().toISOString().split('T')[0];
+
         fila.innerHTML = `
             <td data-label="Cliente"><span></span><input type="text"></td>
             <td data-label="Contacto"><span></span><input type="text"></td>
             <td data-label="Proyecto"><span></span><input type="text"></td>
             <td data-label="Estado" class="estado Pendiente"><span>Pendiente</span></td>
-            <td data-label="Tentativa"><span></span><input type="date"></td>
+            <td data-label="Tentativa"><span></span><input type="date" value="${today}"></td>
             <td data-label="Plazo (días)"><span></span><input type="number" min="0" max="365" step="1"></td>
             <td data-label="Restante"><span>-</span></td>
             <td data-label="Calidad">
@@ -204,7 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="progress-bar"></div>
                 </div>
             </td>
-            <td data-label="Acciones"></td>
         `;
 
         const acciones = document.createElement('div');
@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnBorrar.innerHTML = '🗑️';
         btnBorrar.className = 'delete-btn';
         acciones.append(btnEditar, btnBorrar);
-        fila.querySelector('td[data-label="Acciones"]').appendChild(acciones);
+        fila.appendChild(acciones);
 
         fila.querySelectorAll('input, select').forEach(input => {
             input.addEventListener('input', () => {
@@ -244,9 +244,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, { once: true });
         });
         
-        const today = new Date().toISOString().split('T')[0];
-        fila.querySelector('input[type="date"]').value = today;
-
         toggleEditar(fila, btnEditar, true);
 
         return fila;
@@ -283,7 +280,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         input.value = span.innerText.trim();
                     }
                 } else {
-                    span.innerText = input.value || '';
+                    if (td.dataset.label === 'Progreso') {
+                        const trabajado = td.querySelector('input[placeholder="Trabajado"]').value || 0;
+                        const meta = td.querySelector('input[placeholder="Meta"]').value || 0;
+                        span.innerText = `${trabajado} / ${meta}`;
+                    } else {
+                        span.innerText = input.value || '';
+                    }
                 }
             }
         });
