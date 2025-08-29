@@ -1,0 +1,406 @@
+/*
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ * Estilos generales y base
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap');
+
+:root {
+    --background-color: #0c0c0c;
+    --card-background: rgba(20, 20, 20, 0.6);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --text-color: #e0e0e0;
+    --accent-color: #28a745;
+    --button-hover-color: #3498db;
+    --shadow-color: rgba(0, 0, 0, 0.4);
+    --progress-container-color: rgba(255, 255, 255, 0.1);
+    --progress-bar-color: #4CAF50;
+    --input-background: rgba(40, 40, 40, 0.5);
+    --input-border: rgba(255, 255, 255, 0.2);
+}
+
+body {
+    font-family: 'Roboto', sans-serif; /* Usamos una fuente para el cuerpo */
+    padding: 0;
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 10% 20%, #1e1e1e, #0c0c0c 50%);
+    z-index: -1;
+    animation: backgroundPulse 20s infinite alternate;
+}
+
+@keyframes backgroundPulse {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.1); opacity: 0.8; }
+}
+
+h2 {
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    letter-spacing: -1px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #a8c0ff, #3f51b5);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientText 5s ease infinite;
+}
+
+@keyframes gradientText {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/*
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ * Contenedor principal y elementos de la interfaz
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ */
+.container {
+    position: relative;
+    width: 90%;
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: var(--card-background);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px var(--shadow-color);
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+.container:hover {
+    box-shadow: 0 15px 40px var(--shadow-color);
+    transform: translateY(-5px);
+}
+
+/*
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ * Estilos para la tabla
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+    table-layout: auto;
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    background-color: rgba(12, 12, 12, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 10;
+}
+
+th, td {
+    padding: 20px 15px; /* Aumentamos el padding vertical para hacer las filas más altas */
+    text-align: center;
+    vertical-align: middle;
+    border: none;
+    background: none;
+    font-weight: 700;
+    font-size: 1.2em; /* Texto un poco más grande */
+    transition: all 0.2s ease-in-out;
+}
+
+th {
+    color: var(--text-color);
+    font-size: 1rem; /* Ajuste para el encabezado si es necesario */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 10px 10px 0 0;
+    font-weight: 500;
+}
+
+tbody tr {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, height 0.5s ease, opacity 0.5s ease;
+    height: auto; /* La altura se ajustará con el padding del td */
+    position: relative;
+}
+
+tbody tr:hover {
+    transform: scale(1.01);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+td:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+td:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+        
+/* Oculta la columna "Acciones" en el encabezado y el cuerpo */
+#clientesTable th:last-child, 
+#clientesTable td:last-child {
+    display: none;
+}
+
+/*
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ * Estilos para los elementos de formulario
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+    width: 90%;
+    min-width: 80px;
+    padding: 10px 12px; /* Aumentamos el padding para que coincida con las celdas */
+    border-radius: 8px;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-background);
+    color: var(--text-color);
+    font-size: 1.1rem; /* Texto de entrada más grande */
+    transition: all 0.3s ease;
+    outline: none;
+    appearance: none;
+    -moz-appearance: textfield;
+    box-sizing: border-box;
+    font-weight: normal; 
+}
+
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+}
+
+input:focus, select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px rgba(40, 167, 69, 0.3);
+}
+
+select {
+    padding-right: 30px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="%23e0e0e0" d="M8 12l-4-4h8l-4 4z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+}
+
+span {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 1.2em; /* Texto estático en negrita y más grande */
+}
+
+/*
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ * Estilos para botones y elementos especiales
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ */
+#agregarProyecto {
+    display: block;
+    margin: 30px auto 0;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 30px;
+    background-image: linear-gradient(135deg, #a8c0ff, #3f51b5, #28a745);
+    background-size: 300% 100%;
+    background-position: 0% 50%;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    animation: gradientButton 5s ease infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes gradientButton {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+#agregarProyecto:hover {
+    animation: none;
+    background-position: 100% 50%;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
+}
+
+#agregarProyecto:active {
+    background-position: 100% 50%;
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(40, 167, 69, 0.5);
+}
+
+/*
+ * Botones de acción flotantes (fuera de la tabla)
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ */
+.acciones-flotantes {
+    position: absolute;
+    right: -100px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+tr:hover .acciones-flotantes {
+    opacity: 1;
+    right: 15px;
+}
+
+.acciones-flotantes button {
+    width: 38px; /* Ligeramente más grandes */
+    height: 38px;
+    border-radius: 50%;
+    font-size: 18px; /* Íconos un poco más grandes */
+    border: none;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.acciones-flotantes .edit-btn {
+    background-color: #3498db;
+}
+
+.acciones-flotantes .delete-btn {
+    background-color: #e74c3c;
+}
+
+.acciones-flotantes button:hover {
+    transform: scale(1.1);
+}
+
+/*
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ * Estilos para estados, progreso y animaciones
+ * ---------------------------------------------------------------------------------------------------------------------------------
+ */
+.progress-container {
+    width: 100%;
+    height: 10px; /* Barra de progreso más alta */
+    background-color: var(--progress-container-color);
+    border-radius: 5px;
+    margin-top: 8px; /* Más espacio */
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: var(--progress-bar-color);
+    border-radius: 5px;
+    transition: width 0.4s ease-out;
+}
+
+.estado, .prioridad {
+    font-weight: 700;
+    border-radius: 25px; /* Bordes más redondeados */
+    padding: 8px 15px; /* Más padding */
+    font-size: 1.15em; /* Texto un poco más grande */
+    text-transform: capitalize;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 110px; /* Ancho mínimo ajustado */
+    height: 38px; /* Altura ajustada */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.Pendiente { background-color: rgba(135, 206, 250, 0.2); color: #87cefa; }
+.En-progreso { background-color: rgba(255, 215, 0, 0.2); color: #ffd700; }
+.Completado { background-color: rgba(76, 175, 80, 0.2); color: #4CAF50; }
+.Atrasado { background-color: rgba(255, 69, 0, 0.2); color: #ff4500; }
+
+.MuyBaja { background-color: rgba(119, 221, 119, 0.2); color: #77dd77; }
+.Baja { background-color: rgba(253, 253, 150, 0.2); color: #fdfd96; }
+.Media { background-color: rgba(255, 179, 71, 0.2); color: #ffb347; }
+.Alta { background-color: rgba(255, 105, 97, 0.2); color: #ff6961; }
+.MuyAlta { background-color: rgba(194, 59, 34, 0.2); color: #c23b22; }
+.SinPrioridad { background-color: rgba(204, 204, 204, 0.2); color: #cccccc; }
+
+/* Animaciones de fila */
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.new-project-anim {
+    animation: fadeInSlideUp 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+/* Animación de eliminación de proyecto */
+@keyframes fadeOutSlideDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+        height: var(--row-height);
+        margin-bottom: 12px;
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+        height: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+.project-delete-anim {
+    animation: fadeOutSlideDown 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+/* Animación para el reordenamiento */
+.sorting-anim {
+    transition: transform 0.5s ease-in-out;
+}
