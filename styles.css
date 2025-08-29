@@ -123,19 +123,19 @@ thead {
 }
 
 th, td {
-    padding: 20px 15px; /* Aumentamos el padding vertical para hacer las filas más altas */
+    padding: 15px; /* Aumentamos el padding para hacer las filas más altas */
     text-align: center;
     vertical-align: middle;
     border: none;
     background: none;
-    font-weight: 700;
-    font-size: 1.2em; /* Texto un poco más grande */
+    font-weight: 700; /* Texto en negrita para la legibilidad */
+    font-size: 1.1em; /* Texto más grande */
     transition: all 0.2s ease-in-out;
 }
 
 th {
     color: var(--text-color);
-    font-size: 1rem; /* Ajuste para el encabezado si es necesario */
+    font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     background-color: rgba(255, 255, 255, 0.05);
@@ -147,7 +147,7 @@ tbody tr {
     background-color: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
     transition: transform 0.2s ease, box-shadow 0.2s ease, height 0.5s ease, opacity 0.5s ease;
-    height: auto; /* La altura se ajustará con el padding del td */
+    height: auto;
     position: relative;
 }
 
@@ -184,18 +184,18 @@ input[type="date"],
 select {
     width: 90%;
     min-width: 80px;
-    padding: 10px 12px; /* Aumentamos el padding para que coincida con las celdas */
+    padding: 8px 10px;
     border-radius: 8px;
     border: 1px solid var(--input-border);
     background-color: var(--input-background);
     color: var(--text-color);
-    font-size: 1.1rem; /* Texto de entrada más grande */
+    font-size: 1rem;
     transition: all 0.3s ease;
     outline: none;
     appearance: none;
     -moz-appearance: textfield;
     box-sizing: border-box;
-    font-weight: normal; 
+    font-weight: normal; /* Asegura que los campos de entrada no sean negrita */
 }
 
 input[type="number"]::-webkit-inner-spin-button, 
@@ -219,8 +219,8 @@ select {
 
 span {
     display: inline-block;
-    font-weight: 700;
-    font-size: 1.2em; /* Texto estático en negrita y más grande */
+    font-weight: 700; /* Texto estático en negrita */
+    font-size: 1.1em;
 }
 
 /*
@@ -289,10 +289,10 @@ tr:hover .acciones-flotantes {
 }
 
 .acciones-flotantes button {
-    width: 38px; /* Ligeramente más grandes */
-    height: 38px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    font-size: 18px; /* Íconos un poco más grandes */
+    font-size: 16px;
     border: none;
     color: white;
     cursor: pointer;
@@ -319,31 +319,31 @@ tr:hover .acciones-flotantes {
  */
 .progress-container {
     width: 100%;
-    height: 10px; /* Barra de progreso más alta */
+    height: 8px;
     background-color: var(--progress-container-color);
-    border-radius: 5px;
-    margin-top: 8px; /* Más espacio */
+    border-radius: 4px;
+    margin-top: 5px;
 }
 
 .progress-bar {
     height: 100%;
     width: 0%;
     background-color: var(--progress-bar-color);
-    border-radius: 5px;
+    border-radius: 4px;
     transition: width 0.4s ease-out;
 }
 
 .estado, .prioridad {
     font-weight: 700;
-    border-radius: 25px; /* Bordes más redondeados */
-    padding: 8px 15px; /* Más padding */
-    font-size: 1.15em; /* Texto un poco más grande */
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 1.1em;
     text-transform: capitalize;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: 110px; /* Ancho mínimo ajustado */
-    height: 38px; /* Altura ajustada */
+    min-width: 100px;
+    height: 30px;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
